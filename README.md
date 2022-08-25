@@ -42,9 +42,11 @@ To run this project you need some preparation :
 - `go run .` run it
 
 ## 🔧 Migration Guide 
-`migrate create -ext sql -dir ./migrations -format unix -tz UTC name_of_migration` - Create a migration
-`migrate -path ./migrations -database "mysql://root:secret@tcp(localhost:3306)/reporting" -verbose up`  - migrate up migration
-`migrate -path ./migrations -database "mysql://root:secret@tcp(localhost:3306)/reporting" -verbose down` - migrate down migration
+- `migrate create -ext sql -dir ./migrations -format unix -tz UTC name_of_migration` - Create a migration
+
+- `migrate -path ./migrations -database "mysql://root:secret@tcp(localhost:3306)/reporting" -verbose up`  - migrate up migration
+
+- `migrate -path ./migrations -database "mysql://root:secret@tcp(localhost:3306)/reporting" -verbose down` - migrate down migration
 
 
 ## 📦 Go Library
