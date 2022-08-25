@@ -1,0 +1,108 @@
+{
+	"info": {
+		"_postman_id": "8bc89362-b0f3-4001-9aea-b44b1e06b3e5",
+		"name": "API Reporting",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user_name\": \"admin1\",\r\n    \"password\": \"admin1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Report",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/report?date=2021-11&outlet_id=2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"report"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "2021-11"
+						},
+						{
+							"key": "outlet_id",
+							"value": "2"
+						},
+						{
+							"key": "outlet_name",
+							"value": "Outlet 1",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJtZXJjaGF0X2lkIjoxLCJpc3MiOiJSZXBvcnRpbmdBUEkiLCJleHAiOjE2NjE0NjEwNTcsImlhdCI6MTY2MTQ1NzQ1N30.t7zDBWvjmzckNoJOJeBxf1AYX_uWImv1SQZ71QVxWxQ",
+			"type": "default"
+		}
+	]
+}
