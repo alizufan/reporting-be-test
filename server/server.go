@@ -159,6 +159,7 @@ type AuthRouter interface {
 
 type TransactionRouter interface {
 	Report(rw http.ResponseWriter, r *http.Request)
+	Reporting(rw http.ResponseWriter, r *http.Request)
 }
 
 func (hs *HTTPServer) routes() {
@@ -168,4 +169,5 @@ func (hs *HTTPServer) routes() {
 
 	hs.Router.Post("/login", hs.AuthRouter.Login)
 	hs.Router.With(AppMiddleware.JWTValidation).Get("/report", hs.TransactionRouter.Report)
+	hs.Router.With(AppMiddleware.JWTValidation).Get("/reporting", hs.TransactionRouter.Reporting)
 }

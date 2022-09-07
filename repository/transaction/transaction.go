@@ -14,6 +14,7 @@ import (
 
 type TransactionRepository interface {
 	Report(ctx context.Context, fil ReportFilter) ([]schema.TransactionReport, int, error)
+	Reporting(ctx context.Context, fil ReportFilter) ([]schema.TransactionReport, error)
 }
 
 type Transaction struct {
@@ -26,6 +27,8 @@ type ReportFilter struct {
 	MerchantName string
 	OutletName   string
 	Date         time.Time
+	StartDate    time.Time
+	EndDate      time.Time
 	Limit        int
 	Page         int
 }
@@ -44,6 +47,18 @@ func (f ReportFilter) IsValidMerchantName() bool {
 
 func (f ReportFilter) IsValidOutletName() bool {
 	return len(f.OutletName) > 0
+}
+
+func (f ReportFilter) IsValidRangeDate() bool {
+	if f.StartDate.IsZero() || f.EndDate.IsZero() {
+		return false
+	}
+
+	if f.StartDate.After(f.EndDate) {
+		return false
+	}
+
+	return true
 }
 
 func (t *Transaction) Report(ctx context.Context, fil ReportFilter) ([]schema.TransactionReport, int, error) {
@@ -149,4 +164,37 @@ func (t *Transaction) Report(ctx context.Context, fil ReportFilter) ([]schema.Tr
 	}
 
 	return trxReport, countTrxReport.Count, nil
+}
+
+func (t *Transaction) Reporting(ctx context.Context, fil ReportFilter) ([]schema.TransactionReport, error) {
+	dialect := goqu.Dialect("mysql").From("Transactions").Select(
+		goqu.L("DATE(?)", goqu.I("created_at")).As("date"),
+		goqu.L("SUM(?)", goqu.I("bill_total")).As("omzet"),
+	)
+
+	where := []exp.Expression{
+		goqu.C("merchant_id").Eq(fil.MerchantID),
+	}
+
+	if fil.IsValidOutletID() {
+		where = append(where, goqu.C("outlet_id").Eq(fil.OutletID))
+	}
+
+	if fil.IsValidRangeDate() {
+		where = append(where, goqu.C("created_at").Between(
+			goqu.Range(fil.StartDate.Format("2006-01-02 15:04:05"), fil.EndDate.Format("2006-01-02 15:04:05")),
+		))
+	}
+
+	query, args, err := dialect.Where(where...).GroupBy(goqu.C("date")).Order(goqu.C("date").Asc()).ToSQL()
+	if err != nil {
+		return nil, err
+	}
+
+	trxReport := []schema.TransactionReport{}
+	if err := t.DB.FindAll(ctx, &trxReport, rel.SQL(query, args...)); err != nil {
+		return nil, err
+	}
+
+	return trxReport, nil
 }

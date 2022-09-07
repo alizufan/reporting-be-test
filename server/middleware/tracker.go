@@ -6,7 +6,6 @@ import (
 
 	"reporting/libs/util"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/rs/xid"
 )
@@ -27,7 +26,6 @@ func JWTValidation(next http.Handler) http.Handler {
 				rw.Write([]byte(http.StatusText(http.StatusUnauthorized)))
 				return
 			}
-			spew.Dump(c)
 
 			ctx := context.WithValue(r.Context(), util.CTXJWTPayload, c)
 			next.ServeHTTP(rw, r.WithContext(ctx))

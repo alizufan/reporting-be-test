@@ -39,7 +39,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/report?date=2021-11&outlet_id=2",
+					"raw": "http://localhost:3000/report?limit=5&page=2&start_date=2022-11-11&end_date=2022-12-15",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -51,16 +51,73 @@
 					"query": [
 						{
 							"key": "date",
-							"value": "2021-11"
+							"value": "2021-11",
+							"disabled": true
 						},
 						{
 							"key": "outlet_id",
-							"value": "2"
+							"value": "2",
+							"disabled": true
 						},
 						{
 							"key": "outlet_name",
 							"value": "Outlet 1",
 							"disabled": true
+						},
+						{
+							"key": "limit",
+							"value": "5"
+						},
+						{
+							"key": "page",
+							"value": "2"
+						},
+						{
+							"key": "start_date",
+							"value": "2022-11-11"
+						},
+						{
+							"key": "end_date",
+							"value": "2022-12-15"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Report V2 - Challange",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/reporting?outlet_id=1&start_date=2021-11-01&end_date=2021-12-30&page=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"reporting"
+					],
+					"query": [
+						{
+							"key": "outlet_id",
+							"value": "1"
+						},
+						{
+							"key": "start_date",
+							"value": "2021-11-01",
+							"description": "default : tanggal awal bulan ini"
+						},
+						{
+							"key": "end_date",
+							"value": "2021-12-30",
+							"description": "default : tanggal terakhir bulan ini"
+						},
+						{
+							"key": "page",
+							"value": "1"
 						}
 					]
 				}
