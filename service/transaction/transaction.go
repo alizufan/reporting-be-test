@@ -180,7 +180,7 @@ func (t *Transaction) Reporting(ctx context.Context, req *TrxRequest) (*TrxRespo
 	endy, endm, _ := req.EndDate.Date()
 	endl := req.EndDate.Location()
 
-	days := int(req.EndDate.Sub(req.StartDate).Hours() / 24)
+	days := int(math.Ceil(req.EndDate.Sub(req.StartDate).Hours() / 24))
 	data := []schema.TransactionReport{}
 
 	prevPage := (req.Page - 1) * req.Limit
