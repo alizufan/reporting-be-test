@@ -91,7 +91,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/reporting?outlet_id=1&start_date=2021-11-01&end_date=2021-12-30&page=1",
+					"raw": "http://localhost:3000/reporting?start_date=2021-11-01&end_date=2021-12-30&page=1&limit=10",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -103,21 +103,28 @@
 					"query": [
 						{
 							"key": "outlet_id",
-							"value": "1"
+							"value": "1",
+							"disabled": true
 						},
 						{
 							"key": "start_date",
 							"value": "2021-11-01",
-							"description": "default : tanggal awal bulan ini"
+							"description": "default : tanggal awal bulan ini (note : membutuhkan end_date, end_date harus sesudah atau sama tanggal start_date)"
 						},
 						{
 							"key": "end_date",
 							"value": "2021-12-30",
-							"description": "default : tanggal terakhir bulan ini"
+							"description": "default : tanggal terakhir bulan ini (note : membutuhkan start_date, start_date harus sebelum atau sama tanggal end_date)"
 						},
 						{
 							"key": "page",
-							"value": "1"
+							"value": "1",
+							"description": "default: 1"
+						},
+						{
+							"key": "limit",
+							"value": "10",
+							"description": "default: 10"
 						}
 					]
 				}
