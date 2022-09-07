@@ -172,13 +172,12 @@ func (t *Transaction) Reporting(ctx context.Context, req *TrxRequest) (*TrxRespo
 	}
 
 	// start date
-	s := req.StartDate
-	start := now.With(s)
+	start := now.With(req.StartDate)
 	startEndDay := start.EndOfMonth().Day()
 
 	// end date
-	endy, endm, _ := req.EndDate.Date()
-	endl := req.EndDate.Location()
+	endYear, endMonth, _ := req.EndDate.Date()
+	endLocation := req.EndDate.Location()
 
 	days := int(math.Ceil(req.EndDate.Sub(req.StartDate).Hours() / 24))
 	data := []schema.TransactionReport{}
@@ -186,30 +185,49 @@ func (t *Transaction) Reporting(ctx context.Context, req *TrxRequest) (*TrxRespo
 	prevPage := (req.Page - 1) * req.Limit
 	nextPage := req.Page * req.Limit
 
+	// skiper a data response
+	skip := 0
+
 	day := start.BeginningOfMonth().Day()
 	for i := 1; i <= days; i++ {
+		// skip previous date
 		if i < prevPage {
 			continue
 		}
+		// stop loop when reach goal from current page
 		if i > nextPage {
 			break
 		}
 
 		var date time.Time
 		if day <= startEndDay {
-			date = time.Date(s.Year(), s.Month(), day+i-1, 0, 0, 0, 0, s.Location())
+			// (i - 1) offset date control
+			// # example :
+			// 	day = 1;
+			// 	i = 1;
+			// 	calculated = day+i = 2 (expected start date 1)
+			// 	must adding a offset control that is (i - 1)
+			d := day + i - 1
+			date = time.Date(start.Year(), start.Month(), d, 0, 0, 0, 0, start.Location())
 		} else {
+			// reset date to zero if start new month
 			day = 0
 			day++
-			date = time.Date(endy, endm, day, 0, 0, 0, 0, endl)
+			date = time.Date(endYear, endMonth, day, 0, 0, 0, 0, endLocation)
 		}
 
 		omzet := "0"
-		for _, v := range res {
-			sameDay := date.Day() == v.Date.Day()
-			sameMonth := date.Month().String() == v.Date.Month().String()
+		// improve a looping data response with skipping
+		for i, v := range res[skip:] {
+			var (
+				sameDay   = date.Day() == v.Date.Day()
+				sameMonth = date.Month().String() == v.Date.Month().String()
+			)
+
+			// equalization day and month
 			if sameDay && sameMonth {
 				omzet = v.Omzet
+				skip = i
 				goto skipResLoop
 			}
 		}
